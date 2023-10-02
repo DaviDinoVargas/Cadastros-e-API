@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Images</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h1>Cat Images</h1>
+            <button id="getSingleCatButton" class="btn btn-primary">Get Single Cat</button>
+            <button id="getTenCatsButton" class="btn btn-secondary">Get 10 Cats</button>
+        </div>
+        <div id="catImages" class="row"></div>
+    </div>
+
+    <script>
+        const catImagesContainer = document.getElementById("catImages");
+        const getSingleCatButton = document.getElementById("getSingleCatButton");
+        const getTenCatsButton = document.getElementById("getTenCatsButton");
+
+        function getSingleCatImage() {
+            fetch("https://api.thecatapi.com/v1/images/search")
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const imageUrl = data[0].url;
+                        const imageElement = document.createElement("div");
+                        imageElement.classList.add("col-md-4", "mb-3");
+                        imageElement.innerHTML = `
+                            <div class="card">
+                                <img src="${imageUrl}" class="card-img-top" alt="Cat Image">
+                                <div class="card-body">
+                                    <h5 class="card-title">Cat Image</h5>
+                                </div>
+                            </div>
+                        `;
+                        catImagesContainer.innerHTML = ""; 
+                        catImagesContainer.appendChild(imageElement);
+                    } else {
+                        catImagesContainer.innerHTML = "<p>Nenhuma imagem de gato encontrada.</p>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar imagem de gato:", error);
+                });
+        }
+
+        function getTenCatImages() {
+            fetch("https://api.thecatapi.com/v1/images/search?limit=10")
+                .then(response => response.json())
+                .then(data => {
+                    catImagesContainer.innerHTML = ""; 
+                    
+                    data.forEach(cat => {
+                        const imageUrl = cat.url;
+                        const imageElement = document.createElement("div");
+                        imageElement.classList.add("col-md-4", "mb-3");
+                        imageElement.innerHTML = `
+                            <div class="card">
+                                <img src="${imageUrl}" class="card-img-top" alt="Cat Image">
+                                <div class="card-body">
+                                    <h5 class="card-title">Cat Image</h5>
+                                </div>
+                            </div>
+                        `;
+                        catImagesContainer.appendChild(imageElement);
+                    });
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar imagens de gato:", error);
+                });
+        }
+
+
+        getSingleCatButton.addEventListener("click", getSingleCatImage);
+        getTenCatsButton.addEventListener("click", getTenCatImages);
+    </script>
+</body>
+</html>

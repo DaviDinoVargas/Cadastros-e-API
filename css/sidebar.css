@@ -1,0 +1,22 @@
+/* Adicione este código em style.css */
+#sidebar {
+    position: fixed;
+    height: 100%;
+    width: 0;
+    top: 0;
+    left: -250px;
+    overflow-x: hidden;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    width: 250px;
+    left: 0;
+}
+
+#menu-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 999;
+}

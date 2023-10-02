@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+
+    <title>Cadastro de Contatos</title>
+   
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Cadastro de Contatos</h1>
+
+        <h2 class="mt-4">Novo Contato</h2>
+        <form id="contactForm" class="mt-3">
+            <div class="form-group mb-3">
+                <label for="name">Nome:</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="phone">Telefone:</label>
+                <input type="tel" class="form-control" id="phone" required>
+            </div>
+
+            <button type="button" class="btn btn-primary mr-2" id="addButton" onclick="addContact()">Cadastrar</button>
+            <button type="button" class="btn btn-danger" onclick="clearForm()">Cancelar</button> 
+        </form>
+
+        <h2 class="mt-5">Contatos Cadastrados</h2>
+        <table class="table table-bordered mt-3" id="contactTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        const contactForm = document.getElementById("contactForm");
+        const contactTable = document.getElementById("contactTable");
+        const addButton = document.getElementById("addButton");
+        const contacts = [];
+        let editingIndex = -1;
+
+        function addContact() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+
+            if (name && email && phone) {
+                if (editingIndex === -1) {
+                    const contact = { name, email, phone };
+                    contacts.push(contact);
+                } else {
+                    contacts[editingIndex] = { name, email, phone };
+                    editingIndex = -1;
+                    addButton.innerText = "Cadastrar";
+                }
+                displayContacts();
+                clearForm();
+            }
+        }
+
+        function displayContacts() {
+            const tbody = contactTable.querySelector("tbody");
+            tbody.innerHTML = "";
+
+            contacts.forEach((contact, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${contact.name}</td>
+                    <td>${contact.email}</td>
+                    <td>${contact.phone}</td>
+                    <td>
+                        <button onclick="editContact(${index})">Editar</button>
+                        <button onclick="deleteContact(${index})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editContact(index) {
+            const contact = contacts[index];
+            document.getElementById("name").value = contact.name;
+            document.getElementById("email").value = contact.email;
+            document.getElementById("phone").value = contact.phone;
+            editingIndex = index;
+            addButton.innerText = "Editar";
+        }
+
+        function deleteContact(index) {
+            contacts.splice(index, 1);
+            displayContacts();
+        }
+
+        function clearForm() {
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("phone").value = "";
+        }
+
+        displayContacts();
+    </script>
+

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Image</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex align-items-center justify-content-center">
+            <div class="card" style="width: 30rem;">
+                <img id="catImage" src="" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">Cat Image</h5>
+                    <button id="getCatButton" class="btn btn-primary">Get Cat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const catImage = document.getElementById("catImage");
+        const getCatButton = document.getElementById("getCatButton");
+
+        getCatButton.addEventListener("click", () => {
+            fetch("https://api.thecatapi.com/v1/images/search")
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const imageUrl = data[0].url;
+                       
+                        catImage.src = imageUrl;
+                    } else {
+                        catImage.src = "";
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar imagem de gato:", error);
+                });
+        });
+    </script>
+</body>
+</html>

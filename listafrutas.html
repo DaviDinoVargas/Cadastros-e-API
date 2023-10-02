@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inserir Frutas em um Array</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1>Inserir Frutas em um Array</h1>
+    
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" id="frutaInput" placeholder="Digite uma fruta">
+            <div class="input-group-append">
+                <button class="btn btn-primary" onclick="adicionarFruta()">Adicionar Fruta</button>
+            </div>
+        </div>
+    
+        <ul class="list-group" id="listaFrutas"></ul>
+    </div>
+    <script>
+    
+        var frutas = [];
+    
+        
+        function adicionarFruta() {
+            var frutaInput = document.getElementById("frutaInput");
+            var fruta = frutaInput.value.trim();
+    
+            if (fruta !== "") {
+               
+                if (frutas.indexOf(fruta) === -1) {
+                    frutas.push(fruta);
+                    frutaInput.value = ""; 
+                    atualizarListaFrutas();
+                } else {
+                    alert("Esta fruta já está cadastrada.");
+                }
+            }
+        }
+    
+        
+        function atualizarListaFrutas() {
+            var listaFrutas = document.getElementById("listaFrutas");
+            listaFrutas.innerHTML = ""; 
+    
+            for (var i = 0; i < frutas.length; i++) {
+                var itemLista = document.createElement("li");
+                itemLista.textContent = frutas[i];
+                listaFrutas.appendChild(itemLista);
+            }
+        }
+    </script>
+    
+
+
+
+    <div class="container mt-5">
+        <h1>Lista de Frutas</h1>
+        <div class="form-group">
+            <label for="frutaInput">Digite uma fruta:</label>
+            <input type="text" class="form-control" id="frutaInput">
+        </div>
+        <button class="btn btn-primary" onclick="adicionarFruta()">Adicionar Fruta</button>
+        <br><br>
+        <label>Escolha como visualizar os dados:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="visualizacao" id="visualizacaoParagrafo" value="paragrafo" checked>
+            <label class="form-check-label" for="visualizacaoParagrafo">Parágrafo</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="visualizacao" id="visualizacaoLista" value="lista">
+            <label class="form-check-label" for="visualizacaoLista">Lista</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="visualizacao" id="visualizacaoTabela" value="tabela">
+            <label class="form-check-label" for="visualizacaoTabela">Tabela</label>
+        </div>
+        <div id="dados"></div>
+    </div>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="seu-arquivo-js.js"></script>
+
+    <script>
+        let frutas = [];
+
+        function adicionarFruta() {
+            const frutaInput = document.getElementById("frutaInput");
+            const fruta = frutaInput.value.trim();
+            if (fruta !== "") {
+                frutas.push(fruta);
+                frutaInput.value = "";
+                atualizarVisualizacao();
+            }
+        }
+
+        function atualizarVisualizacao() {
+            const visualizacaoSelect = document.getElementById("visualizacaoSelect");
+            const selectedOption = visualizacaoSelect.value;
+            const frutasContainer = document.getElementById("frutasContainer");
+
+            let html = "";
+            if (selectedOption === "paragrafo") {
+                html = frutas.map(fruta => `<p>${fruta}</p>`).join("");
+            } else if (selectedOption === "lista") {
+                html = `<ul>${frutas.map(fruta => `<li>${fruta}</li>`).join("")}</ul>`;
+            } else if (selectedOption === "tabela") {
+                html = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fruta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${frutas.map(fruta => `<tr><td>${fruta}</td></tr>`).join("")}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            frutasContainer.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

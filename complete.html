@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Contatos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Cadastro de Contatos</h1>
+
+        <h2 class="mt-4">Novo Contato</h2>
+        <form id="contactForm" class="mt-3">
+            <div class="container">
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label">Nome:</label>
+                    <input type="text" class="form-control" id="name" placeholder="Informe o nome" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Informe o e-mail"required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="phone" class="form-label">Telefone:</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Informe o telefone" required>
+                </div>  
+                <div class="form-group mb-3">
+                    <label for="cep" class="form-label">Informe CEP:</label>
+                    <input type="text" id="cep" placeholder="Informe CEP" onblur="preencherEndereco()" class="form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="rua" class="form-label">Rua:</label>
+                    <input type="text" id="rua" placeholder="Informe a Rua" class="form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="bairro" class="form-label">Bairro:</label>
+                    <input type="text" id="bairro" placeholder="Informe o Bairro" class="form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="cidade" class="form-label">Cidade:</label>
+                    <input type="text" id="cidade" placeholder="Informe a Cidade" class="form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="estado" class="form-label">Estado:</label>
+                    <input type="text" id="estado" placeholder="Informe o Estado" class="form-control">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="numero" class="form-label">Número da Casa:</label>
+                    <input type="text" class="form-control" id="numero" placeholder="Informe o Número" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="complemento" class="form-label">Complemento:</label>
+                    <input type="text" class="form-control" id="complemento" placeholder="Informe o Complemento" required>
+                </div>
+
+                <button type="button" class="btn btn-primary mr-2" id="addButton" onclick="addContact()">Cadastrar</button>
+                <button type="button" class="btn btn-danger" onclick="clearForm()">Cancelar</button> 
+            </div>
+        </form>
+
+        <h2 class="mt-5">Contatos Cadastrados</h2>
+        <table class="table table-bordered mt-3" id="contactTable">
+            
+            <thead class="thead-dark" >
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>CEP</th>
+                    <th>Rua</th>
+                    <th>Bairro</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>Número</th>
+                    <th>Complemento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        
+        const contactForm = document.getElementById("contactForm");
+        const contactTable = document.getElementById("contactTable");
+        const addButton = document.getElementById("addButton");
+        const contacts = [];
+        let editingIndex = -1;
+
+        function addContact() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+            const cep = document.getElementById("cep").value;
+
+            if (name && email && phone && cep) {
+                const cep = document.getElementById("cep").value;
+                const numero = document.getElementById("numero").value;
+                const complemento = document.getElementById("complemento").value;
+                const rua = document.getElementById("rua").value;
+                const bairro = document.getElementById("bairro").value;
+                const cidade = document.getElementById("cidade").value;
+                const estado = document.getElementById("estado").value;
+
+                if (editingIndex === -1) {
+                    const contact = { name, email, phone, cep, numero, complemento, rua, bairro, cidade, estado };
+                    contacts.push(contact);
+                } else {
+                    contacts[editingIndex] = { name, email, phone, cep, numero, complemento, rua, bairro, cidade, estado };
+                    editingIndex = -1;
+                    addButton.innerText = "Cadastrar";
+                }
+                displayContacts();
+                clearForm();
+            } else {
+                alert("Preencha todos os campos obrigatórios (Nome, Email, Telefone e Cep).");
+            }
+        }
+
+        function displayContacts() {
+            const tbody = contactTable.querySelector("tbody");
+            tbody.innerHTML = "";
+
+            contacts.forEach((contact, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${contact.name}</td>
+                    <td>${contact.email}</td>
+                    <td>${contact.phone}</td>
+                    <td>${contact.cep}</td>
+                    <td>${contact.rua}</td>
+                    <td>${contact.bairro}</td>
+                    <td>${contact.cidade}</td>
+                    <td>${contact.estado}</td>
+                    <td>${contact.numero}</td>
+                    <td>${contact.complemento}</td>
+                    <td>
+    <div class="btn-group" role="group">
+        <button onclick="editContact(${index})" class="btn btn-primary">Editar</button>
+        <button onclick="deleteContact(${index})" class="btn btn-danger">Excluir</button>
+    </div>
+</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editContact(index) {
+            const contact = contacts[index];
+            document.getElementById("name").value = contact.name;
+            document.getElementById("email").value = contact.email;
+            document.getElementById("phone").value = contact.phone;
+            document.getElementById("cep").value = contact.cep;
+            document.getElementById("numero").value = contact.numero;
+            document.getElementById("complemento").value = contact.complemento;
+            document.getElementById("rua").value = contact.rua;
+            document.getElementById("bairro").value = contact.bairro;
+            document.getElementById("cidade").value = contact.cidade;
+            document.getElementById("estado").value = contact.estado;
+            editingIndex = index;
+            addButton.innerText = "Editar";
+        }
+
+        function deleteContact(index) {
+            contacts.splice(index, 1);
+            displayContacts();
+        }
+
+        function clearForm() {
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("cep").value = "";
+            document.getElementById("numero").value = "";
+            document.getElementById("complemento").value = "";
+            document.getElementById("rua").value = "";
+            document.getElementById("bairro").value = "";
+            document.getElementById("cidade").value = "";
+            document.getElementById("estado").value = "";
+        }
+
+        function preencherEndereco(){
+            const cep = document.getElementById('cep').value;
+         
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then((dados) => dados.json())
+            .then((response) => {
+               document.getElementById('rua').value = response.logradouro;
+               document.getElementById('bairro').value = response.bairro;
+               document.getElementById('cidade').value = response.localidade;
+               document.getElementById('estado').value = response.uf;
+            })
+            .catch((erro) => console.log(erro))
+        }
+    </script>
